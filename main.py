@@ -45,6 +45,7 @@ if __name__ =='__main__':
             frame2=penhold(frame2)
             frame2 = penforce(frame2)
             frame2 = sitpos(frame2)
+            frame1 = cv.flip(frame1, -1)
             frame1=grade(frame1)
 
             frame=np.concatenate((cv.resize(frame1, (WIDTH, HEIGHT)),cv.resize(frame2, (WIDTH, HEIGHT))),axis=1)

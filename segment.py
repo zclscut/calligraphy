@@ -27,6 +27,7 @@ if __name__ =='__main__':
     while True:
         t = time.time()
         ret, frame = cap1.read()
+        frame = cv.flip(frame, -1)
         # print(np.array(frame).shape)#获取帧大小
         # print('第{}帧'.format(i))
         image=segment(frame)
