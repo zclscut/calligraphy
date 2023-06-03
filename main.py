@@ -10,6 +10,7 @@ from segment import *
 #余思进文字转语音
 from audio import *
 from grade import *
+from sitpos import *
 
 if __name__ =='__main__':
     # cap0=cv.VideoCapture('../images/expressions.mp4',0)#分析视频demo表情
@@ -43,7 +44,7 @@ if __name__ =='__main__':
         else:
             frame2=penhold(frame2)
             frame2 = penforce(frame2)
-            frame2 = penforce(frame2)
+            frame2 = sitpos(frame2)
             frame1=grade(frame1)
 
             frame=np.concatenate((cv.resize(frame1, (WIDTH, HEIGHT)),cv.resize(frame2, (WIDTH, HEIGHT))),axis=1)

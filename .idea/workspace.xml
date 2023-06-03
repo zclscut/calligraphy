@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a7283ee-4da1-4d1f-af3f-bdc163c4103b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/grade.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/audio.py" beforeDir="false" afterPath="$PROJECT_DIR$/audio.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/penforce.py" beforeDir="false" afterPath="$PROJECT_DIR$/penforce.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/penhold.py" beforeDir="false" afterPath="$PROJECT_DIR$/penhold.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/segment.py" beforeDir="false" afterPath="$PROJECT_DIR$/segment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sitpos.py" beforeDir="false" afterPath="$PROJECT_DIR$/sitpos.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +134,7 @@
       <workItem from="1678708303127" duration="14000" />
       <workItem from="1678708363889" duration="558000" />
       <workItem from="1678892832166" duration="745000" />
-      <workItem from="1685789495831" duration="5226000" />
+      <workItem from="1685789495831" duration="6177000" />
     </task>
     <servers />
   </component>
@@ -162,7 +154,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/calligraphy$main.coverage" NAME="main Coverage Results" MODIFIED="1685778763727" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/gui_py$main.coverage" NAME="main Coverage Results" MODIFIED="1685796758798" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/gui_py$main.coverage" NAME="main Coverage Results" MODIFIED="1685797758294" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/gui_py$penhold.coverage" NAME="penhold Coverage Results" MODIFIED="1685796673846" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/gui_py$gui.coverage" NAME="gui Coverage Results" MODIFIED="1678708772147" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
