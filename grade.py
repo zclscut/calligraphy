@@ -4,8 +4,7 @@ import numpy as np
 
 
 
-def audio(image):
-
+def grade(image):
     return image
 
 
@@ -27,10 +26,10 @@ if __name__ =='__main__':
     # for i in range(1,2001):
     while True:
         t = time.time()
-        ret, frame = cap2.read()
+        ret, frame = cap1.read()
         # print(np.array(frame).shape)#获取帧大小
         # print('第{}帧'.format(i))
-        image=audio(frame)
+        image=grade(frame)
         # cv.namedWindow('all', cv.WINDOW_NORMAL)
         cv.imshow('all', image)
         print('运行1帧的时间为{:.2f}s'.format(time.time() - t))
