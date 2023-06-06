@@ -21,6 +21,7 @@
 ├─grade.py - 封装单字评分函数，钟楚龙负责
 ├─sitpos.py - 封装坐姿检测函数
 ├─audio.py  - 封装文字转语音函数，余思进负责
+├─requests_ChatGPT.py  - 调用OpenAI的API函数，余思进负责
 ├─database.py - 封装读写mysql数据库函数
 ├─lib - 放置资源文件
 │  ├─
