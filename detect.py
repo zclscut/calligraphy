@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 
 import cv2
+import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
 from numpy import random
@@ -15,6 +16,10 @@ from utils.general import check_img_size, check_requirements, check_imshow, non_
 from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized
 
+import cv2 as cv
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 
 def readTxt(path):
     data = []
@@ -81,7 +86,11 @@ def get_labels1(path):
 
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size
+    source='img'
+    #Python endswith() 方法用于判断字符串是否以指定后缀结尾
     save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
+
+    #判断source字符是否全部由字符组成或有特定的前后缀
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
 
@@ -128,6 +137,14 @@ def detect(save_img=False):
         model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(next(model.parameters())))  # run once
     t0 = time.time()
     for path, img, im0s, vid_cap in dataset:
+        plt.figure('img')
+        plt.imshow(img.transpose(1,2,0))
+        plt.show()
+        plt.figure('im0s')
+        plt.imshow(im0s)
+        plt.show()
+        print('执行一次')
+        print('path={},img={},im0s={},vid_cap={}'.format(path, np.array(img).shape, np.array(im0s).shape, vid_cap))
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -264,7 +281,7 @@ def detect(save_img=False):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default='runs/train/exp7/weights/best.pt', help='model.pt path(s)')#选择模型的版本、大小
-    parser.add_argument('--source', type=str, default='0', help='source')  # file/folder, 0 for webcam
+    parser.add_argument('--source', type=str, default='0', help='source')  # file/folder for singel frame, 0 for webcam
     parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')#图片中间处理过程中的大小，最后会等比例放大成和原图一模一样
     parser.add_argument('--conf-thres', type=float, default=0.75, help='object confidence threshold')#显示图片置信度控制 default=0.25
     parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')#IOU：交并比 NMS：非极大值抑制（多个框中找置信度最大的框）（目的是为了避免重复判断，或者把两个物体判断为一个）（这里大于default我们才把几个框合并成一个框）default=0.45
@@ -284,7 +301,7 @@ if __name__ == '__main__':
     parser.add_argument('--hide-conf', default=True, action='store_true', help='hide confidences')
     opt = parser.parse_args()
     #print(opt)
-    check_requirements(exclude=('pycocotools', 'thop'))
+    #check_requirements(exclude=('pycocotools', 'thop'))
 
     with torch.no_grad():
         # if opt.update:  # update all models (to fix SourceChangeWarning)
