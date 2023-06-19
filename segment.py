@@ -119,8 +119,13 @@ def segment(image):
     (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     # Initialize
-    HEIGHT = 480  # y
-    WIDTH = 640  # x
+    # HEIGHT = 480  # y
+    # WIDTH = 640  # x
+
+    HEIGHT = image.shape[0]  # y
+    WIDTH = image.shape[1]  # x
+    print('h={},w={} in segment.py'.format(HEIGHT,WIDTH))
+
     set_logging()
     device = select_device(opt.device)
     half = device.type != 'cpu'  # half precision only supported on CUDA
@@ -182,7 +187,7 @@ def segment(image):
     y_list = []
     w_list = []
     h_list = []
-    num_ch=[]
+    num_ch=[0]
     # Process detections
     for i, det in enumerate(pred):  # detections per image
         s, im0,  = '', img0
@@ -195,6 +200,7 @@ def segment(image):
             # Print results
             for c in det[:, -1].unique():
                 n = (det[:, -1] == c).sum()  # detections per class
+                num_ch=[]
                 num_ch.append(n.item())
                 s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
                 # print(f'{n}')
@@ -212,9 +218,9 @@ def segment(image):
                     y_list.append(y3)
                     w_list.append(w3)
                     h_list.append(h3)
-                if save_img or view_img:  # Add bbox to image
+                # if save_img or view_img:  # Add bbox to image
                     label = ''  # f'{names[int(cls)]} {conf:.2f}'#不显示标签和置信度了
-                    plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
+                    # plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
 
     seg_list=[]
     seg_list.append(num_ch)
@@ -223,7 +229,7 @@ def segment(image):
     seg_list.append(w_list)
     seg_list.append(h_list)
 
-    print(seg_list)
+
     return image,seg_list
 
 
@@ -251,6 +257,7 @@ if __name__ =='__main__':
         # print(np.array(frame).shape)#获取帧大小
         # print('第{}帧'.format(i))
         image,seg_list=segment(frame)
+        print(seg_list)
         # cv.namedWindow('all', cv.WINDOW_NORMAL)
         cv.imshow('all', image)
         print('运行1帧的时间为{:.2f}s'.format(time.time() - t))
