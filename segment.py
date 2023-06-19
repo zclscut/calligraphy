@@ -178,19 +178,14 @@ def segment(image):
     if classify:
         pred = apply_classifier(pred, modelc, img, img0)
 
+    x_list = []
+    y_list = []
+    w_list = []
+    h_list = []
+    num_ch=[]
     # Process detections
     for i, det in enumerate(pred):  # detections per image
         s, im0,  = '', img0
-
-
-
-        ####################################保存实时检测图片################################
-        # pic_dir = str(save_dir) + '/pic'
-        # if not os.path.exists(pic_dir):
-        #     os.makedirs(pic_dir)
-        # pic_path = pic_dir + '\\' + str(p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')
-        ##################################################################################
-
         s += '%gx%g ' % img.shape[2:]  # print string
         gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
         if len(det):
@@ -200,13 +195,11 @@ def segment(image):
             # Print results
             for c in det[:, -1].unique():
                 n = (det[:, -1] == c).sum()  # detections per class
+                num_ch.append(n.item())
                 s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
                 # print(f'{n}')
             # Write results
-            x_list = []
-            y_list = []
-            w_list = []
-            h_list = []
+
             for *xyxy, conf, cls in reversed(det):
                 if save_txt:  # Write to file
                     xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
@@ -215,56 +208,23 @@ def segment(image):
                     y3 = round(xywh[1] * HEIGHT)
                     w3 = round(xywh[2] * WIDTH)
                     h3 = round(xywh[3] * HEIGHT)
-                    with open(txt_path + '.txt', 'a') as f:
-                        # print(x3,y3,w3,h3)
-                        x_list.append(x3)
-                        y_list.append(y3)
-                        w_list.append(w3)
-                        h_list.append(h3)
-                        f.write(('%g ' * len(line)).rstrip() % line + '\n')
+                    x_list.append(x3)
+                    y_list.append(y3)
+                    w_list.append(w3)
+                    h_list.append(h3)
                 if save_img or view_img:  # Add bbox to image
                     label = ''  # f'{names[int(cls)]} {conf:.2f}'#不显示标签和置信度了
                     plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
 
-            # print(x_list,y_list,w_list,h_list)
-            yield f'{n}', x_list, y_list, w_list, h_list
-            print()  # 每一帧数据空一一行
-            ##############################只保存含目标的实时检测图片#################################
-            # pic = (int(xyxy[0].item()) + int(xyxy[2].item())) / 2
-            # if pic != 0:
-            #     cv2.imwrite(pic_path + f'{p.stem}.jpg', im0)
-            # else:
-            #     im1 = cv2.imread('no.jpg', 1)
-            #     cv2.imwrite(pic_path + f'{p.stem}.jpg', im1)
-            #####################################################################################
+    seg_list=[]
+    seg_list.append(num_ch)
+    seg_list.append(x_list)
+    seg_list.append(y_list)
+    seg_list.append(w_list)
+    seg_list.append(h_list)
 
-        # Print time (inference + NMS)
-        # print(f'{s}Done. ({t2 - t1:.3f}s)')
-        # print(f'{n}') #输出识别到的项目个数
-
-
-
-    # n1, x1, y1, w1, h1 = get_labels1(txt_path)  # 得到实时的label
-    # print(n1)
-    # print(txt_path.split('\\'))
-    # txt_path_list=txt_path.split('\\')
-    # last_txt_path=txt_path_list[0]+'/'+txt_path_list[1]+'/'+txt_path_list[2]+'/'+txt_path_list[3]+'/'+txt_path_list[4]+'.txt'
-    # print(last_txt_path)
-    # if os.path.exists(last_txt_path):
-    #     n1, x1, y1, w1, h1 = get_labels1(last_txt_path)  # 得到实时的label
-    #     print(n1)
-    #     print(x1)
-    #     print(y1)
-    #     print(w1)
-    #     print(h1)
-    # if save_txt or save_img:
-    #     s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
-    #     print(f"Results saved to {save_dir}{s}")
-
-    # print(f'Done. ({time.time() - t0:.3f}s)')
-
-    # return n1,x1,y1,w1,h1
-    return image
+    print(seg_list)
+    return image,seg_list
 
 
 if __name__ =='__main__':
@@ -278,6 +238,7 @@ if __name__ =='__main__':
     WIDTH = 640
     cap1.set(cv.CAP_PROP_FRAME_WIDTH, WIDTH)
     cap1.set(cv.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+    seg_list=[]
     # cap_0.set(5, FPS)# 帧率
     # cap2.set(cv.CAP_PROP_FRAME_WIDTH, WIDTH)
     # cap2.set(cv.CAP_PROP_FRAME_HEIGHT, HEIGHT)
@@ -289,7 +250,7 @@ if __name__ =='__main__':
         frame = cv.flip(frame, -1)
         # print(np.array(frame).shape)#获取帧大小
         # print('第{}帧'.format(i))
-        image=segment(frame)
+        image,seg_list=segment(frame)
         # cv.namedWindow('all', cv.WINDOW_NORMAL)
         cv.imshow('all', image)
         print('运行1帧的时间为{:.2f}s'.format(time.time() - t))
