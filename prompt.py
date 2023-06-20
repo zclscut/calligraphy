@@ -1,6 +1,18 @@
 from request_ChatGPT import post_GPT
 import json
 
+"""
+有四个函数:
+short_eval(lvl, timeout=15)
+long_eval_ziti(lvl, timeout=50)
+long_eval_zishi(lvl, timeout=50)
+long_eval_lidu(lvl, timeout=50)
+
+lvl传入一个int, 1到5, 5表示优秀, 1表示差, 返回一个字符串.
+"""
+
+
+
 def short_eval(lvl, timeout=15):
     system_prompt = f"""你是一个毛笔书法老师. 用户将一个毛笔书写报告作为输入, 你输出对它的改写. 要求:
     # 1. 保持原意大致不变.
