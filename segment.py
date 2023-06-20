@@ -124,7 +124,7 @@ def segment(image):
 
     HEIGHT = image.shape[0]  # y
     WIDTH = image.shape[1]  # x
-    print('h={},w={} in segment.py'.format(HEIGHT,WIDTH))
+    # print('h={},w={} in segment.py'.format(HEIGHT,WIDTH))
 
     set_logging()
     device = select_device(opt.device)

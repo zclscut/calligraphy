@@ -52,6 +52,8 @@ model.load_state_dict(torch.load('lib/' + weights_path,map_location='cuda:0'))
 def grade(frame):
     frame, seg_list = segment(frame)
     image=frame
+    HEIGHT = frame.shape[0]  # y
+    WIDTH = frame.shape[1]  # x
     print('帧尺寸为{}'.format(frame.shape))
     print(seg_list)
     # seg_list=[[6],[352, 340, 417, 419, 423, 346],
@@ -62,16 +64,28 @@ def grade(frame):
     #对每一个汉字进行评分
     for i in range(num_ch):
         x,y,w,h=seg_list[1][i],seg_list[2][i],seg_list[3][i],seg_list[4][i]
+        print('x={},y={},w={},h={} center point'.format(x,y,w,h))
 
-        x=int(x-w/2)
-        y=int(y-h/2)
-        character=frame[x:x+w,y:y+h]
+        max_wh = np.max([w, h])
+        x=int(x-max_wh/2)
+        y=int(y-max_wh/2)
+        print('x={},y={},w={},h={} left top point'.format(x, y, w, h))
+
+        # character=Image.new('RGB', (max_wh, max_wh))#创建全0图像
+        # plt.figure('character')
+        # plt.imshow(character)
+        # plt.show()
+
+        character=np.zeros([max_wh,max_wh,3],dtype=np.float32)
+        # character = Image.fromarray(character)
+        character[0:np.min([y+max_wh,HEIGHT])-y,0:np.min([x+max_wh,WIDTH])-x,:]=frame[y:np.min([y+max_wh,HEIGHT]),x:np.min([x+max_wh,WIDTH]),:]#opencv和yolov的x对应width,y对应height,而ndarray的h在前
+        print('character={} after insert yolov seg'.format(character.shape))
 
 
         # print('image.shape={} before transform'.format(np.array(image).shape))
         print('image.shape={} before transform'.format(np.array(character).shape))
-        character=square(character)
-        print('image.shape={} after square'.format(np.array(character).shape))
+        # character=square(character)
+        # print('image.shape={} after square'.format(np.array(character).shape))
         character = compose(character)
         # character=transforms.Pad([105, 105], fill=0, padding_mode='constant')(character)
         print('image.shape={} after transform'.format(np.array(character).shape))
@@ -82,6 +96,7 @@ def grade(frame):
 
         # print('image.shape={} after transform'.format(np.array(image).shape))
         character = torch.reshape(character, (1, 3, 224, 224))
+
 
         cha_grade=0
         model.eval()
