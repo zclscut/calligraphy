@@ -29,3 +29,25 @@
 ├─img - 放置测试图片或视频
 ```
 
+## 2. 对话系统的API
+- 生成评价
+```python
+import prompt
+
+lvl = 1  # 评分, 取值范围 [1, 2, 3, 4, 5]
+prompt.short_eval(lvl)       # 生成短评, 大概5秒一条结果
+prompt.long_eval_ziti(lvl)   # 生成字体详细评价
+prompt.long_eval_zishi(lvl)  # 生成姿势详细评价
+prompt.long_eval_lidu(lvl)   # 生成力度详细评价
+```
+
+- 文本语音互转
+```python
+from audio2text import audio2text
+from text2audio import text2audio
+
+text = "需要转换成语音的文字"
+text2audio(text)  # 将输出为: ./audio/text2audio.mp3
+
+audio2text()      # 读取 ./audio/audio2text.mp3 并转为文字, 存储为 audio2text.txt
+```
