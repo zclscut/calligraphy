@@ -35,10 +35,10 @@
 import prompt
 
 lvl = 1  # 评分, 取值范围 [1, 2, 3, 4, 5]
-prompt.short_eval(lvl)       # 生成短评, 大概5秒一条结果
-prompt.long_eval_ziti(lvl)   # 生成字体详细评价
-prompt.long_eval_zishi(lvl)  # 生成姿势详细评价
-prompt.long_eval_lidu(lvl)   # 生成力度详细评价
+e = prompt.short_eval(lvl)       # 生成短评, 大概5秒一条结果, e是str
+e = prompt.long_eval_ziti(lvl)   # 生成字体详细评价
+e = prompt.long_eval_zishi(lvl)  # 生成姿势详细评价
+e = prompt.long_eval_lidu(lvl)   # 生成力度详细评价
 ```
 
 - 文本语音互转
