@@ -51,6 +51,7 @@ model.load_state_dict(torch.load('lib/' + weights_path,map_location='cuda:0'))
 
 def grade(frame,is_sort=True):
     frame, seg_list = segment(frame,is_sort)
+    grade_list=[]
     image=frame
     HEIGHT = frame.shape[0]  # y
     WIDTH = frame.shape[1]  # x
@@ -104,17 +105,19 @@ def grade(frame,is_sort=True):
             character=character.to(device)
             out = model(character)
             cha_grade = out.argmax(1)[0] + 1
-
+            grade_list.append(cha_grade.item())
             print('图片预测为{}'.format(cha_grade))
         # grade_list = ['很差', '差', '一般', '好', '很好']
-        grade_list = ['1', '2', '3', '4', '5']
+        grade_print_list = ['1', '2', '3', '4', '5']
         # print('图片预测为{}'.format(grade_list[cha_grade-1]))
 
         cv.rectangle(image, (x,y), (x+w,y+h), (0, 255, 0), 2)
         font = cv.FONT_HERSHEY_SIMPLEX  # 定义字体
-        image = cv.putText(image, '{}'.format(grade_list[cha_grade-1]), (x,y-10), font, 2, ( 0, 0,255), 4)
+        image = cv.putText(image, '{}'.format(grade_print_list[cha_grade-1]), (x,y-10), font, 2, ( 0, 0,255), 4)
 
-    return image
+    seg_list.append(grade_list)
+    print(seg_list)
+    return image,seg_list
 
 
 if __name__ =='__main__':
@@ -139,7 +142,7 @@ if __name__ =='__main__':
         frame = cv.flip(frame, -1)
         # print(np.array(frame).shape)#获取帧大小
         # print('第{}帧'.format(i))
-        image=grade(frame)
+        image,grade_list=grade(frame)
         # cv.namedWindow('all', cv.WINDOW_NORMAL)
         cv.imshow('all', image)
         print('运行1帧的时间为{:.2f}s'.format(time.time() - t))

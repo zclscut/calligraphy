@@ -165,14 +165,14 @@ def sort_calligraphy(seg_list):
 
     num_ch=[0]
     num_ch[0]=len(x_l1)
-    print('num_ch={} in function sort_call in segment.py'.format(num_ch))
+    # print('num_ch={} in function sort_call in segment.py'.format(num_ch))
     seg_list=[]
     seg_list.append(num_ch)
     seg_list.append(x_l1)
     seg_list.append(y_l1)
     seg_list.append(w_l1)
     seg_list.append(h_l1)
-    print('seg_list={} in function sort_call in segment.py'.format(seg_list))
+    # print('seg_list={} in function sort_call in segment.py'.format(seg_list))
 
     return seg_list
 
