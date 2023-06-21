@@ -1,11 +1,11 @@
 import cv2 as cv
 import time
-import numpy as np
 import argparse
 import os
 import time
 from pathlib import Path
-
+import numpy as np
+import math
 import cv2
 import torch
 import torch.backends.cudnn as cudnn
@@ -104,7 +104,79 @@ def get_labels1(path):
 
     return n,x,y,w,h #n为检测出的目标数，x,y为中心点的坐标，w，h为宽度和高度（以yolov5官方定义的标准）
 
-def segment(image):
+
+def sort_calligraphy(seg_list):
+    num_ch,x_l, y_l, w_l, h_l=seg_list
+    x_l1 = []
+    y_l1 = []
+    w_l1 = []
+    h_l1 = []
+    if num_ch[0]:
+        x_l=np.array(x_l)
+        y_l=np.array(y_l)
+        sum=x_l+y_l
+        max_idx=np.argmin(sum)
+        #加入了左上角顶点坐标
+        x1=x_l[max_idx]
+        y1=y_l[max_idx]
+        x_l1.append(x_l[max_idx])
+        y_l1.append(y_l[max_idx])
+        w_l1.append(w_l[max_idx])
+        h_l1.append(h_l[max_idx])
+
+        #行边界
+        r_bound1=y_l1[0]-math.floor(h_l1[0]/2)
+        r_bound2=y_l1[0]+math.floor(h_l1[0]/2)
+        #列边界
+        c_bound1=x_l1[0]-math.floor(w_l1[0]/2)
+        c_bound2=x_l1[0]+math.floor(w_l1[0]/2)
+
+
+        y_c1=[]
+        h_c1=[]
+        for x in x_l:
+            if c_bound1<x<c_bound2 and not(x==x1):
+                y_c1.append(y_l[np.where(x_l == x)[0][0]])
+        y_c1 = np.sort(y_c1)
+        y_l1 = np.concatenate((y_l1, y_c1))
+
+        for y in y_l1:
+            h_c1.append(h_l[np.where(y_l == y)[0][0]])
+        count=0
+        for y in y_l1:
+            r_bound1 = y - math.floor(h_c1[count] / 2)
+            r_bound2 = y + math.floor(h_c1[count] / 2)
+
+            x_c1 = []
+            for y in y_l:
+                if r_bound1<y<r_bound2 and not(y==y1):
+                    x_c1.append(x_l[np.where(y_l==y)[0][0]])
+            x_c1=np.sort(x_c1)
+            x_l1=np.concatenate((x_l1,x_c1))
+            count = count + 1
+        y_l1=[]
+        w_l1=[]
+        h_l1=[]
+        for x in x_l1:
+            y_l1.append(y_l[np.where(x_l == x)[0][0]])
+            w_l1.append(w_l[np.where(x_l == x)[0][0]])
+            h_l1.append(h_l[np.where(x_l == x)[0][0]])
+        x_l1=x_l1.tolist()
+
+    num_ch=[0]
+    num_ch[0]=len(x_l1)
+    print('num_ch={} in function sort_call in segment.py'.format(num_ch))
+    seg_list=[]
+    seg_list.append(num_ch)
+    seg_list.append(x_l1)
+    seg_list.append(y_l1)
+    seg_list.append(w_l1)
+    seg_list.append(h_l1)
+    print('seg_list={} in function sort_call in segment.py'.format(seg_list))
+
+    return seg_list
+
+def segment(image,is_sort=True):
     source, weights, view_img, save_txt, imgsz = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size
     source='img'
     # Python endswith() 方法用于判断字符串是否以指定后缀结尾
@@ -222,12 +294,17 @@ def segment(image):
                     label = ''  # f'{names[int(cls)]} {conf:.2f}'#不显示标签和置信度了
                     # plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
 
+    #按照书写习惯，调整字体顺序
+
     seg_list=[]
     seg_list.append(num_ch)
     seg_list.append(x_list)
     seg_list.append(y_list)
     seg_list.append(w_list)
     seg_list.append(h_list)
+
+    if is_sort:
+        seg_list= sort_calligraphy(seg_list)
 
 
     return image,seg_list

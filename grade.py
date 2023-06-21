@@ -49,8 +49,8 @@ model.to(device)
 model.load_state_dict(torch.load('lib/' + weights_path,map_location='cuda:0'))
 
 
-def grade(frame):
-    frame, seg_list = segment(frame)
+def grade(frame,is_sort=True):
+    frame, seg_list = segment(frame,is_sort)
     image=frame
     HEIGHT = frame.shape[0]  # y
     WIDTH = frame.shape[1]  # x
@@ -91,7 +91,7 @@ def grade(frame):
         print('image.shape={} after transform'.format(np.array(character).shape))
 
         # plt.figure('character')
-        # plt.imshow(character.permute(1,2,0))
+        # plt.imshow(np.array(character.permute(1,2,0)).astype('uint8'))
         # plt.show()
 
         # print('image.shape={} after transform'.format(np.array(image).shape))
